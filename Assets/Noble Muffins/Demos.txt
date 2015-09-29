@@ -1,0 +1,8 @@
+Demo sources are downloaded separately, from our website, on the appropriate product page. This is so that if you fork demo code, updates to Turbo Slicer or Limb Hacker do not overwrite your modifications.
+
+Limb Hacker: http://noblemuffins.com/?page_id=205
+
+Turbo Slicer: http://noblemuffins.com/?page_id=320
+
+Look for the link to "complete demo sources" just under the live demo.
+
