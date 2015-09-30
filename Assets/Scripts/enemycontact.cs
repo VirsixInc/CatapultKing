@@ -15,6 +15,7 @@ public class enemycontact : MonoBehaviour
     void Start()
     {
         EnemyHealth = Health - 30f;
+        GetComponent<Animator>().SetBool("Idle", true);
     }
 
     void OnCollisionEnter(Collision col)
@@ -23,8 +24,9 @@ public class enemycontact : MonoBehaviour
           //if we are hit by a ball
         if (col.gameObject.tag == "ball")
         {
-            GetComponent<AudioSource>().Play();
             Destroy(gameObject);
+            GetComponent<AudioSource>().Play();
+            
         }
         else //we're hit by something else
         {
@@ -40,9 +42,7 @@ public class enemycontact : MonoBehaviour
 
             if (Health < EnemyHealth)
             {//change the shown animation
-                Debug.Log("dkjlhfalkdsajlkfjkaldfjlkdasjfkldsjflkdjfoiwekfjkdlnfkjefijfkdjfkeajifjdskjfiejflkdjflka");
-                GetComponent<Animation>().Play("Shotgun");
-                
+                GetComponent<Animator>().SetBool("Shotgun",true);
             }
             if (Health <= 0) Destroy(this.gameObject);
         }
