@@ -17,7 +17,7 @@ public class brick : MonoBehaviour
         Health -= damage;
         //if health is 0, destroy the block
         if (Health <= 0) Destroy(this.gameObject);
-        Debug.Log(Health);
+        
     }
     
     public float Health = 70f;

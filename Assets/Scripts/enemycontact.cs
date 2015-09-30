@@ -5,9 +5,10 @@ using System.Collections;
 // a reference to the capsule collider of the character
 
 
+
 public class enemycontact : MonoBehaviour
 {
-
+    public GameObject myparticle;
     public float Health = 150f;
    
     private float EnemyHealth;
@@ -43,8 +44,13 @@ public class enemycontact : MonoBehaviour
             if (Health < EnemyHealth)
             {//change the shown animation
                 GetComponent<Animator>().SetBool("Shotgun",true);
+                
             }
-            if (Health <= 0) Destroy(this.gameObject);
+            if (Health <= 0)
+            {
+                Instantiate(myparticle);
+                Destroy(this.gameObject);
+            }
         }
     }
 }
