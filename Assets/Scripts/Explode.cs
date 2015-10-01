@@ -7,7 +7,6 @@ public class Explode : MonoBehaviour {
     public float radius = 5.0f;
     public float upwardsModifier = 0.0f;
     public ForceMode forceMode;
-
     // Use this for initialization
     void Start()
     {
@@ -28,6 +27,7 @@ public class Explode : MonoBehaviour {
                 }
             }
         }
+
     }
 
 

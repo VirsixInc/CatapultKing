@@ -2,11 +2,11 @@
 using System.Collections;
 
 public class Dodgeball : MonoBehaviour {
+    public float bulletlifetime = 3.0f;
 
 
-	
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 	
 	}
 
@@ -24,5 +24,7 @@ public class Dodgeball : MonoBehaviour {
 
                 }
         }
-  }
+        
+        Destroy(GameObject.FindGameObjectWithTag("ball"), bulletlifetime);
+    }
 }
