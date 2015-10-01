@@ -3,7 +3,7 @@ using System.Collections;
 
 public class brick : MonoBehaviour
 {
-
+    
 
     void OnCollisionEnter(Collision col)
     {
@@ -12,7 +12,16 @@ public class brick : MonoBehaviour
         float damage = col.gameObject.GetComponent<Rigidbody>().velocity.magnitude * 10;
         //don't play audio for small damages
         if (damage >= 10)
-            GetComponent<AudioSource>().Play();
+        {
+            if (!GetComponent<AudioSource>().isPlaying)
+            {
+                // Debug.Log("kfjlkadfjlkdajflkjdalkfjkdajfkldajflkjflkajflkjalkfjlkdjflkajdlkfjlkaf");
+                //GetComponent<AudioSource>().Play();
+                //return null;
+            }
+
+            // GetComponent<AudioSource>().Play();
+        }
         //decrease health according to magnitude of the object that hit us
         Health -= damage;
         //if health is 0, destroy the block

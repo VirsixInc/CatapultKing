@@ -10,7 +10,7 @@ public class Destroyer : MonoBehaviour
         //destroyers are located in the borders of the screen
         //if something collides with them, the'll destroy it
         string tag = col.gameObject.tag;
-        if (tag == "block" || tag == "enemy" || tag == "ball")
+        if (tag == "block" || tag == "enemy" || tag == "ball" || tag == "ground")
         {
             Destroy(col.gameObject);
         }
