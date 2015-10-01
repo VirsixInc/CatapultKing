@@ -15,7 +15,7 @@ public class brick : MonoBehaviour
         {
             if (!GetComponent<AudioSource>().isPlaying)
             {
-                // Debug.Log("kfjlkadfjlkdajflkjdalkfjkdajfkldajflkjflkajflkjalkfjlkdjflkajdlkfjlkaf");
+                
                 //GetComponent<AudioSource>().Play();
                 //return null;
             }
