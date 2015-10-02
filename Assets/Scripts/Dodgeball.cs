@@ -3,7 +3,9 @@ using System.Collections;
 
 public class Dodgeball : MonoBehaviour {
     public float bulletlifetime = 3.0f;
-
+    public GameObject hitParticle;
+    public float partlifetime = 0.1f;
+    public ParticleEmitter hitpart;
 
     // Update is called once per frame
     void Update () {
@@ -24,7 +26,10 @@ public class Dodgeball : MonoBehaviour {
 
                 }
         }
-        
+        GameObject.Instantiate(hitParticle, transform.position, Quaternion.identity);
         Destroy(GameObject.FindGameObjectWithTag("ball"), bulletlifetime);
+        //hitpart.Emit();
+        Destroy(GameObject.FindGameObjectWithTag("particle"), partlifetime);
+        
     }
 }

@@ -17,7 +17,7 @@ public class Explode : MonoBehaviour {
   void OnCollisionEnter(Collision coll)
     {
 
-        if (coll.collider.gameObject.tag == "ground" || coll.collider.gameObject.tag == "block")
+        if (coll.collider.gameObject.tag == "ground" || coll.collider.gameObject.tag == "block" || coll.collider.gameObject.tag == "groundMtn")
         {
             foreach (Collider col in Physics.OverlapSphere(transform.position, radius))
             {

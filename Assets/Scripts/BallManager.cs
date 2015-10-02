@@ -7,7 +7,7 @@ public class BallManager : MonoBehaviour {
 
 	public GameObject ballPrefab;
 	public float shootStrength = 1000f;
-	public GameObject hitParticle;
+	
 
 	float ballShootCooldown = 0.5f;
 
@@ -52,6 +52,6 @@ public class BallManager : MonoBehaviour {
 
 		Vector3 shootDir = shootData.dest - ball.transform.position;
 		shootDir.Normalize();
-    ball.GetComponent<Rigidbody>().AddForce(shootDir*shootStrength);
+        ball.GetComponent<Rigidbody>().AddForce(shootDir*shootStrength);
 	}
 }

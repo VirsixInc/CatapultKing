@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     private List<GameObject> Blocks;
     private List<GameObject> Balls;
     private List<GameObject> Enemies;
+    public GUIStyle progress_empty;
+    public GUIStyle progress_full;
 
     void Start()
     {
@@ -50,9 +52,13 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    private bool AllEneimesDestroyed()
+    public void Blockhealth()
     {
-        return Enemies.All((x => x == null));
+        float health = GetComponent<brick>().Health;
+    }
+    private bool Blockcheck()
+    {
+        return Blocks.All((x => x == null));
 
     }
     public static void AutoResize(int screenWidth, int screenHeight)
@@ -79,7 +85,9 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
+
     }
+
 
 
    

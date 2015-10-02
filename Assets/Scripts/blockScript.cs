@@ -16,7 +16,7 @@ public class blockScript : MonoBehaviour {
 	}
 
   void OnCollisionStay(Collision coll){
-    if(coll.collider.gameObject.tag == "ground" && broken){
+    if(coll.collider.gameObject.tag == "ground" || coll.collider.gameObject.tag == "groundMtn" && broken){
       Destroy(gameObject);
     }
   }
