@@ -17,7 +17,7 @@ public class Healthbar : MonoBehaviour {
 	
 	public int health;
 	int healthNormalized;
-	GameObject player;
+	GameObject block;
 	
 	Image frame;
 	Image bar;
@@ -27,7 +27,7 @@ public class Healthbar : MonoBehaviour {
 	public int displayYellowBar;
 	public string healthMessage;
 	public string criticalMessage = "Critical";
-	public string playerTag;
+	public string blockTag;
 	
 	Text Message;
 	Text Critical;
@@ -65,7 +65,7 @@ public class Healthbar : MonoBehaviour {
 		fontSize = Mathf.Clamp(fontSize, 5, 30);
 		Debugger();
 		BuildHierarchy();
-		startPos = player.transform.position;
+		startPos = block.transform.position;
 	}
 
 
@@ -74,7 +74,7 @@ public class Healthbar : MonoBehaviour {
 	//Note: healthNormalized cuts the number so that it's on a 100 scale like in every game (it's basically the percentage)
 	void FixedUpdate(){
 
-		if (player) {
+		if (block) {
 			if (alive) {
 				if (healthNormalized <= 0) {
 					alive = false;
@@ -95,7 +95,7 @@ public class Healthbar : MonoBehaviour {
 
 		}
 		else
-			player = GameObject.FindGameObjectWithTag("block");
+			block = GameObject.FindGameObjectWithTag("block");
 	}
 
 	void DisplayText(){
@@ -384,7 +384,7 @@ public class Healthbar : MonoBehaviour {
 	//This is only for the demo - to bring player back to life after 2 seconds and respawn it back to the start position
 	IEnumerator Resurrection(){
 		yield return new WaitForSeconds(2.0F);
-		player.transform.position = startPos;
+		block.transform.position = startPos;
 		alive = true;
 		health = 1000;
 
@@ -393,13 +393,13 @@ public class Healthbar : MonoBehaviour {
 	void Debugger(){
 		myTheme = FindThemeIndex(chosenTheme);
 		myFontTheme = FindFontTheme(chosenFont);
-		player = GameObject.FindGameObjectWithTag(playerTag);
+		block = GameObject.FindGameObjectWithTag(blockTag);
 		
 		Sprite frame = sd.sprites[myTheme].HealthBar_Frame;
 		Sprite green = sd.sprites[myTheme].GreenBar;
 		Sprite red = sd.sprites[myTheme].RedBar;
 		
-		if (player == null) {
+		if (block == null) {
 			Debug.LogError("No 'Player' tag in scene for Healthbar class!");
 			Debug.Break();
 		}

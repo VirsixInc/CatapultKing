@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts;
 
 public class Dodgeball : MonoBehaviour {
     public float bulletlifetime = 3.0f;
@@ -11,10 +12,22 @@ public class Dodgeball : MonoBehaviour {
     void Update () {
 	
 	}
+    /*
+    void FixedUpdate()
+    {
+        StartCoroutine(DestroyAfter(2));
+
+    }
+
+    IEnumerator(DestroyAfter(float seconds)
+    {
+        yeild return new WaitForSeconds(seconds);
+        Destroy(gameObject);
+    }*/
 
 
 
-  void OnCollisionEnter(Collision coll){
+    void OnCollisionEnter(Collision coll){
     if(coll.collider.gameObject.tag == "block")
         {
             coll.collider.gameObject.GetComponent<blockScript>().broken = true;
@@ -32,4 +45,5 @@ public class Dodgeball : MonoBehaviour {
         Destroy(GameObject.FindGameObjectWithTag("particle"), partlifetime);
         
     }
+
 }

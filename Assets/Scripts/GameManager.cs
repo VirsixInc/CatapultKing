@@ -55,10 +55,12 @@ public class GameManager : MonoBehaviour
     public void Blockhealth()
     {
         float health = GetComponent<brick>().Health;
+           
     }
     private bool Blockcheck()
     {
         return Blocks.All((x => x == null));
+        
 
     }
     public static void AutoResize(int screenWidth, int screenHeight)

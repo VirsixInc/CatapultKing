@@ -41,9 +41,9 @@ public class HealthBarInspector : Editor {
 			initialHealth = EditorPrefs.GetInt("ih");
 
 			EditorGUILayout.LabelField("Player options", title);
-			healthbar.playerTag = EditorGUILayout.TagField("Player's tag", healthbar.playerTag);
+			healthbar.blockTag = EditorGUILayout.TagField("Player's tag", healthbar.blockTag);
 
-			GameObject locator = GameObject.FindGameObjectWithTag(healthbar.playerTag);
+			GameObject locator = GameObject.FindGameObjectWithTag(healthbar.blockTag);
 
 			if (locator) {
 				EditorGUILayout.LabelField("Player assigned to: " + locator.gameObject.name);
