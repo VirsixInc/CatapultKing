@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
         //unsubscribe and resubscribe from the event
         //this ensures that we subscribe only once
         //**********************Maybe add state to make sure that only one ball can be thrown*******************************//
+
+
+
+
     }
     void Update()
     {
@@ -57,13 +61,12 @@ public class GameManager : MonoBehaviour
     public void Blockhealth()
     {
         float health = GetComponent<brick>().Health;
-           
+       
+     
     }
     private bool Blockcheck()
     {
         return Blocks.All((x => x == null));
-        
-
     }
     public static void AutoResize(int screenWidth, int screenHeight)
     {
