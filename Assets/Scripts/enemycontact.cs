@@ -8,9 +8,9 @@ using System.Collections;
 
 public class enemycontact : MonoBehaviour
 {
-    public GameObject myparticle;
+    
     public float Health = 150f;
-   
+    public GameManager _Scriptb;
     private float EnemyHealth;
     // Use this for initialization
     void Start()
@@ -48,8 +48,9 @@ public class enemycontact : MonoBehaviour
             }
             if (Health <= 0)
             {
-                Instantiate(myparticle);
-                Destroy(this.gameObject);
+                Debug.Log("enemycontact");
+                _Scriptb.achivement();
+               // Destroy(this.gameObject);
             }
         }
     }

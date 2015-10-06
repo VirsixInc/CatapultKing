@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     private List<GameObject> Enemies;
     public GUIStyle progress_empty;
     public GUIStyle progress_full;
+    public Texture aTexture;
+    public GameObject enemy;
 
     void Start()
     {
@@ -68,6 +70,12 @@ public class GameManager : MonoBehaviour
         //Incase of different quality projectors or load settings
         Vector2 resizeRatio = new Vector2((float)Screen.width / screenWidth, (float)Screen.height / screenHeight);
         GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(resizeRatio.x, resizeRatio.y, 1.0f));
+    }
+    public void achivement()
+    {
+        Debug.Log("achivment");
+
+
     }
     void OnGui()
     {

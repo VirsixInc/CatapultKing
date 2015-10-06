@@ -36,11 +36,13 @@ public class Dodgeball : MonoBehaviour {
         {
             coll.collider.gameObject.GetComponent<blockScript>().broken = true;
             GameObject[] shatters = TurboSlice.instance.shatter(coll.collider.gameObject, 2);
-
+            print("PRE FOREACH");
             foreach (GameObject shattered in shatters)
             {
                 shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
-
+                shattered.gameObject.tag = "broken";
+                print(shattered);
+                
             }
            
 
