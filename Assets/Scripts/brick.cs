@@ -5,13 +5,26 @@ using System.Linq;
 
 public class brick : MonoBehaviour
 {
-    public float Health = 70f;
+  
+    public float Health = 70f; //todo make maxhealth
+    public GameManager currManager;
     public float damage;
+    public int id;
     private List<GameObject> Blocks;
 
+    private float currentHealth;
 
+    void Start(){
+      if(gameObject.tag == "broken"){
+        Destroy(this);
+      }
+
+      currManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+      //currentHealth = maxHealth;
+    }
     void Update()
-    {}
+    {
+    }
 
 
 
@@ -19,13 +32,34 @@ public class brick : MonoBehaviour
     {
         if (col.gameObject.GetComponentInParent<Rigidbody>() == null) return;
         gameObject.transform.parent.GetComponent<Rigidbody>();
-        damage = col.gameObject.GetComponentInParent<Rigidbody>().velocity.magnitude * 10;
+        damage = col.gameObject.GetComponentInParent<Rigidbody>().velocity.magnitude * 2;
        
         //Debug.Log("I'm attached to " + gameObject.name);
 
-        Health -= damage;
+
+           
+        if(gameObject.tag == "block"){
+          Health -= damage;
+          currentHealth = Health;
+          if(currManager != null){
+            bool isDead = currManager.allBricks[id].updateBlock((int)currentHealth);
+            if(isDead){
+              GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 2);
+              foreach (GameObject shattered in shatters){
+                shattered.gameObject.tag = "broken";
+                shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
+                                  
+              }
+              Destroy(gameObject);
+            }
+          }
+        }
         //if health is 0, destroy the block
         //if (Health <= 0) Destroy(this.gameObject);
         
     }
+    public void takeDamage(float dmgAmt){
+
+    }
+
 }

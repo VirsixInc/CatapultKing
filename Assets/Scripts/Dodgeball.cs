@@ -32,20 +32,6 @@ public class Dodgeball : MonoBehaviour {
 
 
     void OnCollisionEnter(Collision coll) {
-        if (coll.collider.gameObject.tag == "block")
-        {
-            coll.collider.gameObject.GetComponent<blockScript>().broken = true;
-            GameObject[] shatters = TurboSlice.instance.shatter(coll.collider.gameObject, 2);
-            
-            foreach (GameObject shattered in shatters)
-            {
-                shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
-                shattered.gameObject.tag = "broken";
-                                
-            }
-           
-
-        }
         SpecialEffectsHelper.Instance.Explosion(transform.position);
 
         //GameObject.Instantiate(hitParticle, transform.position, Quaternion.identity);

@@ -3,6 +3,23 @@ using System.Collections.Generic;
 using Assets.Scripts;
 using System.Linq;
 
+public class BrickData{
+  public int maxHealth, currHealth;
+  public bool dead;
+  public BrickData(int maxHealthToSet){
+    maxHealth = maxHealthToSet;
+    currHealth = maxHealth;
+  }
+  
+  public bool updateBlock(int healthToSet){
+    currHealth = healthToSet;
+    if(currHealth < 1){
+      dead = true;
+    }
+    return dead;
+  }
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameState CurrentGameState = GameState.Start;
@@ -14,11 +31,21 @@ public class GameManager : MonoBehaviour
     public Texture aTexture;
     public GameObject enemy;
 
+    public BrickData[] allBricks; 
+    float totalLevelHealth;
+
     void Start()
     {
         CurrentGameState = GameState.Start;
           //find all relevant game objects
         Blocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("block"));
+        allBricks = new BrickData[Blocks.Count];
+        for(int i = 0; i<allBricks.Length; i++){
+          brick currBrick = Blocks[i].GetComponent<brick>();
+          currBrick.id = i;
+          allBricks[i] = new BrickData((int)currBrick.Health);
+        }
+        totalLevelHealth = GetTotalLevelHealth();
         Balls = new List<GameObject>(GameObject.FindGameObjectsWithTag("ball"));
         Enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("enemy"));
         //unsubscribe and resubscribe from the event
@@ -31,6 +58,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+      print(GetDestroyedBlocks());
         switch (CurrentGameState)
         {
             case GameState.Start:
@@ -58,12 +86,35 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    public void Blockhealth()
-    {
-        float health = GetComponent<brick>().Health;
-       
-     
+    public int GetDestroyedBlocks(){
+      int amtOfBlocksDestroyed = 0;
+      foreach(BrickData currData in allBricks){
+        if(currData.dead){
+          amtOfBlocksDestroyed++;
+        }
+      }
+      return amtOfBlocksDestroyed;
     }
+    public float GetTotalLevelHealth(){
+      float healthToReturn = 0f;
+      foreach(BrickData currData in allBricks){
+        healthToReturn = healthToReturn + currData.maxHealth;
+      }
+      return healthToReturn;
+    }
+    public float GetCurrentHealth(){
+      float healthToReturn = 0f;
+      foreach(BrickData currData in allBricks){
+        healthToReturn = healthToReturn + currData.currHealth;
+      }
+      return healthToReturn;
+    }
+
+    public void UpdateBlock(int id, float currHealth){
+
+
+    }
+
     private bool Blockcheck()
     {
         return Blocks.All((x => x == null));
