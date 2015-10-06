@@ -8,10 +8,10 @@ public class Progressbar : MonoBehaviour {
 	void Start () {
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        Image image = GetComponent<Image>();
-        image.fillAmount = Mathf.Lerp(image.fillAmount, 1f, Time.deltaTime * .5f);
-	}
+  public void updateBar(float amt){
+    print("AMOUNT IS: " + amt);
+    Image image = GetComponent<Image>();
+    image.fillAmount = amt;
+
+  }
 }
