@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public GUIStyle progress_full;
     public Texture aTexture;
     public GameObject enemy;
+    public Progressbar currBar;
 
     public BrickData[] allBricks; 
     float totalLevelHealth;
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
       print(GetDestroyedBlocks());
+      currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
         switch (CurrentGameState)
         {
             case GameState.Start:
