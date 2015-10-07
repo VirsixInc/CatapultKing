@@ -129,9 +129,6 @@ public class GameManager : MonoBehaviour
     }
     public void achivement()
     {
-        Debug.Log("achivment");
-
-
     }
     void OnGui()
     {
@@ -153,7 +150,9 @@ public class GameManager : MonoBehaviour
 
 
     }
-
+    void percent()
+    {
+    }
 
 
    
