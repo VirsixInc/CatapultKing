@@ -9,7 +9,6 @@ public class Progressbar : MonoBehaviour {
 	
 	}
   public void updateBar(float amt){
-    print("AMOUNT IS: " + amt);
     Image image = GetComponent<Image>();
     image.fillAmount = amt;
 

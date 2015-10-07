@@ -34,16 +34,7 @@ public class Dodgeball : MonoBehaviour {
     void OnCollisionEnter(Collision coll) {
         SpecialEffectsHelper.Instance.Explosion(transform.position);
 
-        //GameObject.Instantiate(hitParticle, transform.position, Quaternion.identity);
-        Destroy(GameObject.FindGameObjectWithTag("ball"), bulletlifetime);
-        //hitpart.Emit();
-       /* if (hitpart)
-        {
-            if (!hitpart.IsAlive())
-                Destroy(gameObject);
-        }
-        */
-
+        Destroy(gameObject, bulletlifetime);
         Destroy(GameObject.FindGameObjectWithTag("particle"), partlifetime);
         
     }

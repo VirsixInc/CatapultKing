@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Assets.Scripts;
+using System;
 using System.Linq;
 
 public class BrickData{
@@ -22,6 +23,10 @@ public class BrickData{
 
 public class GameManager : MonoBehaviour
 {
+    public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
+      {"fragment",10},
+      {"ball",9999}
+    };
     public static GameState CurrentGameState = GameState.Start;
     private List<GameObject> Blocks;
     private List<GameObject> Balls;
@@ -44,7 +49,7 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i<allBricks.Length; i++){
           brick currBrick = Blocks[i].GetComponent<brick>();
           currBrick.id = i;
-          allBricks[i] = new BrickData((int)currBrick.Health);
+          allBricks[i] = new BrickData((int)currBrick.maxHealth);
         }
         totalLevelHealth = GetTotalLevelHealth();
         Balls = new List<GameObject>(GameObject.FindGameObjectsWithTag("ball"));
@@ -59,34 +64,28 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-      print(GetDestroyedBlocks());
       currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
-        switch (CurrentGameState)
-        {
-            case GameState.Start:
-                if (Input.GetMouseButtonUp(0))
-                {
-                    //Animate ball being loaded
+      switch (CurrentGameState)
+      {
+          case GameState.Start:
+              break;
+          case GameState.BallMovingtoPos:
+              //Can add pause here or timer
+              break;
+          case GameState.Playing:
+              //Add timer if ball is being thrown or timer is activated
+              break;
+          case GameState.Won:
+          case GameState.Lost:
+              if (Input.GetMouseButtonUp(0)) ;
+              {
+                  Application.LoadLevel(Application.loadedLevel);
 
-                }
-                break;
-            case GameState.BallMovingtoPos:
-                //Can add pause here or timer
-                break;
-            case GameState.Playing:
-                //Add timer if ball is being thrown or timer is activated
-                break;
-            case GameState.Won:
-            case GameState.Lost:
-                if (Input.GetMouseButtonUp(0)) ;
-                {
-                    Application.LoadLevel(Application.loadedLevel);
-
-                }
-                break;
-            default:
-                break;
-        }
+              }
+              break;
+          default:
+              break;
+      }
     }
     public int GetDestroyedBlocks(){
       int amtOfBlocksDestroyed = 0;
