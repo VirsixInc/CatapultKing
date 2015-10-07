@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-      print(GetDestroyedBlocks());
+      
       currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
         switch (CurrentGameState)
         {
