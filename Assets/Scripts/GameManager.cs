@@ -24,7 +24,7 @@ public class BrickData{
 public class GameManager : MonoBehaviour
 {
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
-      {"fragment",10},
+      //{"fragment",5},
       {"ball",9999}
     };
     public static GameState CurrentGameState = GameState.Start;

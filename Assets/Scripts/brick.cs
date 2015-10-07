@@ -10,7 +10,7 @@ public class brick : MonoBehaviour
     public int id;
     private List<GameObject> Blocks;
 
-    public int maxHealth = 70; //todo make maxhealth
+    public int maxHealth = 150; //todo make maxhealth
     private int currentHealth;
 
 
@@ -33,6 +33,7 @@ public class brick : MonoBehaviour
       currManager.allBricks[id].updateBlock(0); //KILL BLOCK
       Destroy(gameObject);
     }
+
     void OnCollisionEnter(Collision col)
     {
       if(col.gameObject.tag == "ground"){
@@ -43,7 +44,13 @@ public class brick : MonoBehaviour
       }else{
         return;
       }
-     
+      if(col.gameObject.GetComponent<Rigidbody>()){
+        damageToReceive = (int)(damageToReceive*col.gameObject.GetComponent<Rigidbody>().velocity.magnitude);
+        if(damageToReceive < 3){
+          return;
+        }
+      }
+
       //Debug.Log("I'm attached to " + gameObject.name);
 
 
@@ -66,9 +73,6 @@ public class brick : MonoBehaviour
       //if health is 0, destroy the block
       //if (Health <= 0) Destroy(this.gameObject);
         
-    }
-    public void takeDamage(float dmgAmt){
-
     }
 
 }
