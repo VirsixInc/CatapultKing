@@ -16,7 +16,6 @@ namespace Assets.Scripts
     public enum GameState
     {
         Start,
-        BallMovingtoPos,
         Playing,
         Won,
         Lost

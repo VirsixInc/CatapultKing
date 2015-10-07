@@ -24,7 +24,7 @@ public class BrickData{
 public class GameManager : MonoBehaviour
 {
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
-      //{"fragment",5},
+      {"fragment",5},
       {"ball",9999}
     };
     public static GameState CurrentGameState = GameState.Start;
@@ -44,14 +44,6 @@ public class GameManager : MonoBehaviour
     {
         CurrentGameState = GameState.Start;
           //find all relevant game objects
-        Blocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("block"));
-        allBricks = new BrickData[Blocks.Count];
-        for(int i = 0; i<allBricks.Length; i++){
-          brick currBrick = Blocks[i].GetComponent<brick>();
-          currBrick.id = i;
-          allBricks[i] = new BrickData((int)currBrick.maxHealth);
-        }
-        totalLevelHealth = GetTotalLevelHealth();
         Balls = new List<GameObject>(GameObject.FindGameObjectsWithTag("ball"));
         Enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("enemy"));
         //unsubscribe and resubscribe from the event
@@ -64,25 +56,24 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-      currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
+      print(CurrentGameState);
       switch (CurrentGameState)
       {
           case GameState.Start:
-              break;
-          case GameState.BallMovingtoPos:
-              //Can add pause here or timer
-              break;
+            Blocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("block"));
+            allBricks = new BrickData[Blocks.Count];
+            for(int i = 0; i<allBricks.Length; i++){
+              brick currBrick = Blocks[i].GetComponent<brick>();
+              currBrick.id = i;
+              allBricks[i] = new BrickData((int)currBrick.maxHealth);
+            }
+            totalLevelHealth = GetTotalLevelHealth();
+            CurrentGameState = GameState.Playing;
+            break;
           case GameState.Playing:
-              //Add timer if ball is being thrown or timer is activated
-              break;
-          case GameState.Won:
-          case GameState.Lost:
-              if (Input.GetMouseButtonUp(0)) ;
-              {
-                  Application.LoadLevel(Application.loadedLevel);
-
-              }
-              break;
+            currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
+            //Add timer if ball is being thrown or timer is activated
+            break;
           default:
               break;
       }

@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Explode : MonoBehaviour {
     public string buttonName = "Fire1";
-    public float force = 100.0f;
-    public float radius = 5.0f;
+    public float force;
+    public float radius;
     public float upwardsModifier = 0.0f;
     public ForceMode forceMode;
 
