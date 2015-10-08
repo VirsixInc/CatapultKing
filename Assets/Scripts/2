@@ -25,25 +25,24 @@ public class brick : MonoBehaviour{
   }
 
   void Update(){
-    if(currentHealth <= 0 && gameObject.tag == "block"){
-      gameObject.tag = "fragment";
+    if(currentHealth <= 0){
       GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 3);
       foreach (GameObject shattered in shatters){
         shattered.gameObject.tag = "fragment";
         shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
         shattered.GetComponent<SinkComp>().enabled = true;
       }
-      DestroyBrick();
+      Destroy(gameObject);
     }
   }
-  public void DestroyBrick(){
+  void DestroyBlock(){
     currManager.allBricks[id].updateBlock(0); //KILL BLOCK
     Destroy(gameObject);
   }
 
   void OnTriggerExit(Collider col){
     if(col.gameObject.tag == "ground"){
-      DestroyBrick();
+      DestroyBlock();
     }
   }
   public bool ReceiveDamage(string type, float amt){
@@ -60,8 +59,10 @@ public class brick : MonoBehaviour{
     return isDead;
   }
   void OnCollisionEnter(Collision col){
-    if(col.gameObject.tag == "block" || 
-        !currManager.damageValues.ContainsKey(col.gameObject.tag)){
+    if(col.gameObject.tag == "block"){
+      return;
+    }
+    if(!currManager.damageValues.ContainsKey(col.gameObject.tag)){
       return;
     }
     if(gameObject.tag == "block" && col.gameObject.GetComponent<Rigidbody>()){

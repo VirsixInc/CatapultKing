@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour{
   //This is not the damage inflicted, this is the maximum amount of damage
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
       {"fragment",1},
+      {"explosion",50},
       {"ball",999999}
     };
     public static GameState CurrentGameState;
@@ -72,12 +73,16 @@ public class GameManager : MonoBehaviour{
           }
           currBar = GameObject.Find("HealthOverlay").GetComponent<Progressbar>();
           totalLevelHealth = GetTotalLevelHealth();
+          print(Blocks.Count);
+          print(allBricks.Length);
           CurrentGameState = GameState.Playing;
           break;
         case GameState.Start:
           break;
         case GameState.Playing:
           currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
+          print(GetDestroyedBlocks());
+          print(allBricks.Length);
           //Add timer if ball is being thrown or timer is activated
           break;
         default:
