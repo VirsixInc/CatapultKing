@@ -5,8 +5,16 @@ public class fragment : MonoBehaviour {
 
   bool sink;
   Vector3 destVec;
-  float startTime, journeyLength, speed=0.1f;
+  float startTime = 0f, journeyLength, speed=0.1f, delay = 5f;
   void Update(){
+    if(startTime != 0 && !sink && startTime < Time.time){
+      destVec = transform.position;
+      destVec.y = destVec.y - 10f;
+      journeyLength = Vector3.Distance(transform.position,destVec);
+      gameObject.GetComponent<Collider>().enabled = false;
+      Destroy(gameObject.GetComponent<Rigidbody>());
+      sink = true;
+    }
     if(sink){
       float distCovered = (Time.time - startTime) * speed;
       float fracJourney = distCovered / journeyLength;
@@ -18,14 +26,8 @@ public class fragment : MonoBehaviour {
   }
 
   void OnCollisionEnter(Collision coll){
-    if(coll.gameObject.tag == "ground"){
-      destVec = transform.position;
-      destVec.y = destVec.y - 10f;
-      startTime = Time.time;
-      journeyLength = Vector3.Distance(transform.position,destVec);
-      gameObject.GetComponent<Collider>().enabled = false;
-      Destroy(gameObject.GetComponent<Rigidbody>());
-      sink = true;
+    if(coll.gameObject.tag == "ground" && gameObject.tag == "fragment"){
+      startTime = Time.time + delay;
     }
   }
 }

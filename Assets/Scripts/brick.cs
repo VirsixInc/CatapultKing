@@ -11,9 +11,11 @@ public class brick : MonoBehaviour{
   public int maxHealth = 150; //todo make maxhealth
   private int currentHealth;
 
+  Rigidbody currBody;
 
 
   void Start(){
+    currBody = GetComponent<Rigidbody>();
     if(gameObject.tag == "broken"){
       Destroy(this);
     }
@@ -36,21 +38,22 @@ public class brick : MonoBehaviour{
     if(col.gameObject.tag == "block"){
       return;
     }
-
     if(!currManager.damageValues.ContainsKey(col.gameObject.tag)){
-      print("DOES NOT CONTAIN");
       return;
     }
     int damageToReceive;
     if(currManager.damageValues.TryGetValue(col.gameObject.tag, out damageToReceive)){
-      print("OUT");
     }else{
-      print("ELSE");
       return;
     }
     if(col.gameObject.GetComponent<Rigidbody>()){
-      damageToReceive = (int)(damageToReceive*col.gameObject.GetComponent<Rigidbody>().velocity.magnitude);
-      if(damageToReceive < 5){
+      damageToReceive = (int)(damageToReceive*(Mathf.Clamp(col.gameObject.GetComponent<Rigidbody>().velocity.magnitude, 0f, 1f)));
+      /*
+      print(damageToReceive);
+      print(col.gameObject.GetComponent<Rigidbody>().velocity.normalized.magnitude);
+      */
+      print(damageToReceive);
+      if(damageToReceive < 5f){
         return;
       }
     }

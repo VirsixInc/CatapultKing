@@ -6,7 +6,7 @@ public class BallManager : MonoBehaviour {
 
 
 	public GameObject ballPrefab;
-	public float shootStrength = 1000f;
+	public float shootStrength;
 	
 
 	float ballShootCooldown = 0.5f;
