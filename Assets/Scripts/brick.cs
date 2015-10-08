@@ -58,7 +58,7 @@ public class brick : MonoBehaviour{
         bool isDead = currManager.allBricks[id].updateBlock((int)currentHealth);
         if(isDead){
         print("I AM DEAD");
-          GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 2);
+          GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 4);
           foreach (GameObject shattered in shatters){
             shattered.gameObject.tag = "fragment";
             shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
