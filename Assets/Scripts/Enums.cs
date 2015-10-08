@@ -13,15 +13,6 @@ namespace Assets.Scripts
         BallFlying
     }
 
-    public enum GameState
-    {
-        Start,
-        Playing,
-        Won,
-        Lost
-    }
-
-
     public enum BallState
     {
         BeforeThrown,

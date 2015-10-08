@@ -5,7 +5,7 @@ public class SinkComp : MonoBehaviour {
 
   bool sink;
   Vector3 destVec;
-  float startTime = 0f, journeyLength, speed=0.1f, delay = 3f;
+  float startTime = 0f, journeyLength, speed=0.1f, delay = 2f;
   void Update(){
     if(startTime != 0 && !sink && startTime < Time.time){
       destVec = transform.position;

@@ -21,13 +21,22 @@ public class BrickData{
   }
 }
 
-public class GameManager : MonoBehaviour
-{
+public class GameManager : MonoBehaviour{
+  public enum GameState{
+    Title,
+    ConfigureLevel,
+    Start,
+    Playing,
+    Won,
+    Lost
+  }
+  //Add tag of the objects to collide with damage value
+  //This is not the damage inflicted, this is the maximum amount of damage
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
-      {"fragment",10},
+      {"fragment",1},
       {"ball",999999}
     };
-    public static GameState CurrentGameState = GameState.Start;
+    public static GameState CurrentGameState;
     private List<GameObject> Blocks;
     public GUIStyle progress_empty;
     public GUIStyle progress_full;
@@ -38,31 +47,41 @@ public class GameManager : MonoBehaviour
     public BrickData[] allBricks; 
     float totalLevelHealth;
 
-    void Start()
-    {
-        CurrentGameState = GameState.Start;
+    void Awake(){
+      DontDestroyOnLoad(gameObject);
     }
-    void Update()
-    {
-      switch (CurrentGameState)
-      {
-          case GameState.Start:
-            Blocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("block"));
-            allBricks = new BrickData[Blocks.Count];
-            for(int i = 0; i<allBricks.Length; i++){
-              brick currBrick = Blocks[i].GetComponent<brick>();
-              currBrick.id = i;
-              allBricks[i] = new BrickData((int)currBrick.maxHealth);
-            }
-            totalLevelHealth = GetTotalLevelHealth();
-            CurrentGameState = GameState.Playing;
+    void Update(){
+      print(CurrentGameState);
+      if(Application.loadedLevelName == "Title"){
+        CurrentGameState = GameState.Title;
+      }
+      switch (CurrentGameState){
+        case GameState.Title:
+          if(Input.GetMouseButtonDown(0)){
+            Application.LoadLevel("Level1");
+            CurrentGameState = GameState.ConfigureLevel;
+          }
+          break;
+        case GameState.ConfigureLevel:
+          Blocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("block"));
+          allBricks = new BrickData[Blocks.Count];
+          for(int i = 0; i<allBricks.Length; i++){
+            brick currBrick = Blocks[i].GetComponent<brick>();
+            currBrick.id = i;
+            allBricks[i] = new BrickData((int)currBrick.maxHealth);
+          }
+          currBar = GameObject.Find("HealthOverlay").GetComponent<Progressbar>();
+          totalLevelHealth = GetTotalLevelHealth();
+          CurrentGameState = GameState.Playing;
+          break;
+        case GameState.Start:
+          break;
+        case GameState.Playing:
+          currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
+          //Add timer if ball is being thrown or timer is activated
+          break;
+        default:
             break;
-          case GameState.Playing:
-            currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
-            //Add timer if ball is being thrown or timer is activated
-            break;
-          default:
-              break;
       }
     }
     public int GetDestroyedBlocks(){
