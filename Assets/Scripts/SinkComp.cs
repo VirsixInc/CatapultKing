@@ -32,4 +32,12 @@ public class SinkComp : MonoBehaviour {
       startTime = Time.time + delay;
     }
   }
+  void OnCollisionExit(Collision coll){
+    if(coll.gameObject.tag == "ground" && 
+        (gameObject.tag == "fragment" || 
+        gameObject.tag == "ball")){
+      sink = false;
+      startTime = 0;
+    }
+  }
 }

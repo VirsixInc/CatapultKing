@@ -6,18 +6,24 @@ using System.Linq;
 
 public class BrickData{
   public int maxHealth, currHealth;
-  public bool dead;
-  public BrickData(int maxHealthToSet){
+  public bool isDead;
+  public int id;
+  public brick assocBlock;
+  public BrickData(int maxHealthToSet, int idToSet, brick assocBlockToSet, GameManager gmToSet){
     maxHealth = maxHealthToSet;
     currHealth = maxHealth;
+    id = idToSet;
+    assocBlock = assocBlockToSet;
+    assocBlock.gameObject.name = id.ToString();
+    assocBlock.currManager = gmToSet;
   }
   
   public bool updateBlock(int healthToSet){
     currHealth = healthToSet;
-    if(currHealth < 1){
-      dead = true;
+    if(currHealth <= 0){
+      isDead = true;
     }
-    return dead;
+    return isDead;
   }
 }
 
@@ -69,7 +75,7 @@ public class GameManager : MonoBehaviour{
           for(int i = 0; i<allBricks.Length; i++){
             brick currBrick = Blocks[i].GetComponent<brick>();
             currBrick.id = i;
-            allBricks[i] = new BrickData((int)currBrick.maxHealth);
+            allBricks[i] = new BrickData((int)currBrick.maxHealth, i, currBrick, this);
           }
           currBar = GameObject.Find("HealthOverlay").GetComponent<Progressbar>();
           totalLevelHealth = GetTotalLevelHealth();
@@ -81,8 +87,11 @@ public class GameManager : MonoBehaviour{
           break;
         case GameState.Playing:
           currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
-          print(GetDestroyedBlocks());
-          print(allBricks.Length);
+          foreach(BrickData data in allBricks){
+            if(!data.isDead){
+              print("BLOCK ID: " + data.id + "    BLOCK HEALTH: " + data.currHealth);
+            }
+          }
           //Add timer if ball is being thrown or timer is activated
           break;
         default:
@@ -92,7 +101,7 @@ public class GameManager : MonoBehaviour{
     public int GetDestroyedBlocks(){
       int amtOfBlocksDestroyed = 0;
       foreach(BrickData currData in allBricks){
-        if(currData.dead){
+        if(currData.isDead){
           amtOfBlocksDestroyed++;
         }
       }

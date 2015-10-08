@@ -20,12 +20,12 @@ public class brick : MonoBehaviour{
       Destroy(this);
     }
 
-    currManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     currentHealth = maxHealth;
   }
 
   void Update(){
     if(currentHealth <= 0 && gameObject.tag == "block"){
+      currManager.allBricks[id].updateBlock(0); //KILL BLOCK
       gameObject.tag = "fragment";
       GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 3);
       foreach (GameObject shattered in shatters){
@@ -60,8 +60,10 @@ public class brick : MonoBehaviour{
     return isDead;
   }
   void OnCollisionEnter(Collision col){
-    if(col.gameObject.tag == "block" || 
-        !currManager.damageValues.ContainsKey(col.gameObject.tag)){
+    if(col.gameObject.tag == "block"){
+      return;
+    }
+    if(!currManager.damageValues.ContainsKey(col.gameObject.tag)){
       return;
     }
     if(gameObject.tag == "block" && col.gameObject.GetComponent<Rigidbody>()){
