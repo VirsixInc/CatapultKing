@@ -64,6 +64,10 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+<<<<<<< HEAD
+=======
+      
+>>>>>>> e0b60e0e3a91346a0374f709801b896c3f828828
       currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
       switch (CurrentGameState)
       {
@@ -128,9 +132,6 @@ public class GameManager : MonoBehaviour
     }
     public void achivement()
     {
-        Debug.Log("achivment");
-
-
     }
     void OnGui()
     {
@@ -152,7 +153,9 @@ public class GameManager : MonoBehaviour
 
 
     }
-
+    void percent()
+    {
+    }
 
 
    
