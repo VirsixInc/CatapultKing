@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class fragment : MonoBehaviour {
+public class SinkComp : MonoBehaviour {
 
   bool sink;
   Vector3 destVec;
-  float startTime = 0f, journeyLength, speed=0.1f, delay = 5f;
+  float startTime = 0f, journeyLength, speed=0.1f, delay = 3f;
   void Update(){
     if(startTime != 0 && !sink && startTime < Time.time){
       destVec = transform.position;
@@ -19,14 +19,16 @@ public class fragment : MonoBehaviour {
       float distCovered = (Time.time - startTime) * speed;
       float fracJourney = distCovered / journeyLength;
       transform.position = Vector3.Lerp(transform.position, destVec, fracJourney); 
-      if(fracJourney > 0.8f){
+      if(Vector3.Distance(transform.position, destVec)<1f){
         Destroy(gameObject);
       }
     }
   }
 
   void OnCollisionEnter(Collision coll){
-    if(coll.gameObject.tag == "ground" && gameObject.tag == "fragment"){
+    if(coll.gameObject.tag == "ground" && 
+        (gameObject.tag == "fragment" || 
+        gameObject.tag == "ball")){
       startTime = Time.time + delay;
     }
   }

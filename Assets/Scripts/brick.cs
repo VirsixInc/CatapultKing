@@ -48,11 +48,6 @@ public class brick : MonoBehaviour{
     }
     if(col.gameObject.GetComponent<Rigidbody>()){
       damageToReceive = (int)(damageToReceive*(Mathf.Clamp(col.gameObject.GetComponent<Rigidbody>().velocity.magnitude, 0f, 1f)));
-      /*
-      print(damageToReceive);
-      print(col.gameObject.GetComponent<Rigidbody>().velocity.normalized.magnitude);
-      */
-      print(damageToReceive);
       if(damageToReceive < 5f){
         return;
       }
@@ -62,11 +57,12 @@ public class brick : MonoBehaviour{
       if(currManager != null){
         bool isDead = currManager.allBricks[id].updateBlock((int)currentHealth);
         if(isDead){
+        print("I AM DEAD");
           GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 2);
           foreach (GameObject shattered in shatters){
             shattered.gameObject.tag = "fragment";
             shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
-            shattered.GetComponent<fragment>().enabled = true;
+            shattered.GetComponent<SinkComp>().enabled = true;
           }
           Destroy(gameObject);
         }

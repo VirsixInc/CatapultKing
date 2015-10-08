@@ -29,8 +29,6 @@ public class GameManager : MonoBehaviour
     };
     public static GameState CurrentGameState = GameState.Start;
     private List<GameObject> Blocks;
-    private List<GameObject> Balls;
-    private List<GameObject> Enemies;
     public GUIStyle progress_empty;
     public GUIStyle progress_full;
     public Texture aTexture;
@@ -43,16 +41,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         CurrentGameState = GameState.Start;
-          //find all relevant game objects
-        Balls = new List<GameObject>(GameObject.FindGameObjectsWithTag("ball"));
-        Enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("enemy"));
-        //unsubscribe and resubscribe from the event
-        //this ensures that we subscribe only once
-        //**********************Maybe add state to make sure that only one ball can be thrown*******************************//
-
-
-
-
     }
     void Update()
     {
