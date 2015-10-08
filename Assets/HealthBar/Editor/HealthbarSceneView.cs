@@ -13,8 +13,6 @@ public class HealthbarSceneView : Editor {
 	void Awake (){
 		hb = FindObjectOfType<Healthbar>();
 		//player = GameObject.FindGameObjectWithTag("Player").transform;
-		if (hb == null)
-			Debug.Log("Healthbar not in scene!");
 	}
 
 	public void OnSceneGUI() {

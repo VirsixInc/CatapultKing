@@ -5,6 +5,7 @@ using Assets.Scripts;
 using System.Linq;
 using System;
 
+<<<<<<< HEAD
 public class brick : MonoBehaviour
 {
   
@@ -12,10 +13,17 @@ public class brick : MonoBehaviour
     public int id;
     private List<GameObject> Blocks;
 <<<<<<< HEAD
+=======
+public class brick : MonoBehaviour{
+  public GameManager currManager;
+  public int id;
+  private List<GameObject> Blocks;
+>>>>>>> wyattDevBranch
 
-    public int maxHealth = 70; //todo make maxhealth
-    private int currentHealth;
+  public int maxHealth = 150; //todo make maxhealth
+  private int currentHealth;
 
+  Rigidbody currBody;
 
 =======
     public float shattimer =5.0f;
@@ -25,6 +33,7 @@ public class brick : MonoBehaviour
 
 
 
+<<<<<<< HEAD
     void Start(){
       if(gameObject.tag == "broken"){
             
@@ -33,31 +42,36 @@ public class brick : MonoBehaviour
 
       currManager = GameObject.Find("GameManager").GetComponent<GameManager>();
       currentHealth = maxHealth;
+=======
+  void Start(){
+    currBody = GetComponent<Rigidbody>();
+    if(gameObject.tag == "broken"){
+      Destroy(this);
+>>>>>>> wyattDevBranch
     }
-    void Update()
-    {
-    }
 
+    currentHealth = maxHealth;
+  }
 
-
-    void DestroyBlock(){
+  void Update(){
+    if(currentHealth <= 0 && gameObject.tag == "block"){
       currManager.allBricks[id].updateBlock(0); //KILL BLOCK
-      Destroy(gameObject);
+      gameObject.tag = "fragment";
+      GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 3);
+      foreach (GameObject shattered in shatters){
+        shattered.gameObject.tag = "fragment";
+        shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
+        shattered.GetComponent<SinkComp>().enabled = true;
+      }
+      DestroyBrick();
     }
-    void OnCollisionEnter(Collision col)
-    {
-      if(col.gameObject.tag == "ground"){
-        DestroyBlock();
-      }
-      int damageToReceive;
-      if(currManager.damageValues.TryGetValue(col.gameObject.tag, out damageToReceive)){
-      }else{
-        return;
-      }
-     
-      //Debug.Log("I'm attached to " + gameObject.name);
+  }
+  public void DestroyBrick(){
+    currManager.allBricks[id].updateBlock(0); //KILL BLOCK
+    Destroy(gameObject);
+  }
 
-
+<<<<<<< HEAD
 <<<<<<< HEAD
          
       if(gameObject.tag == "block"){
@@ -89,14 +103,31 @@ public class brick : MonoBehaviour
             Destroy(gameObject);
           }
         }
+=======
+  void OnTriggerExit(Collider col){
+    if(col.gameObject.tag == "ground"){
+      DestroyBrick();
+    }
+  }
+  public bool ReceiveDamage(string type, float amt){
+    bool isDead = false;
+    amt = Mathf.Clamp(amt, 0f, 1f);
+    if(currManager.damageValues.ContainsKey(type)){
+      int dmgToReceive;
+      if(currManager.damageValues.TryGetValue(type, out dmgToReceive)){
+        dmgToReceive = (int)(dmgToReceive*amt);
+        currentHealth = currentHealth-dmgToReceive;
+        isDead = currManager.allBricks[id].updateBlock((int)currentHealth);
+>>>>>>> wyattDevBranch
       }
-      //if health is 0, destroy the block
-      //if (Health <= 0) Destroy(this.gameObject);
-        
     }
-    public void takeDamage(float dmgAmt){
-
+    return isDead;
+  }
+  void OnCollisionEnter(Collision col){
+    if(col.gameObject.tag == "block"){
+      return;
     }
+<<<<<<< HEAD
     /*IEnumerator shattertimer()
     {
         Debug.Log("before timer");
@@ -111,6 +142,15 @@ public class brick : MonoBehaviour
     {
         throw new NotImplementedException();
     }
+=======
+    if(!currManager.damageValues.ContainsKey(col.gameObject.tag)){
+      return;
+    }
+    if(gameObject.tag == "block" && col.gameObject.GetComponent<Rigidbody>()){
+      bool isDead = ReceiveDamage(col.gameObject.tag, Mathf.Clamp(col.gameObject.GetComponent<Rigidbody>().velocity.magnitude, 0f, 1f));
+    }
+  }
+>>>>>>> wyattDevBranch
 }
 
 
