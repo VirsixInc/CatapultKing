@@ -44,8 +44,10 @@ public class GameManager : MonoBehaviour{
     Start,
     Playing,
     Won,
+    GameOver,
     Lost
   }
+  public static GameManager s_instance;
   //Add tag of the objects to collide with damage value
   //This is not the damage inflicted, this is the maximum amount of damage
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
@@ -55,32 +57,52 @@ public class GameManager : MonoBehaviour{
       {"ball",999999}
     };
     public static GameState CurrentGameState;
-    public GUIStyle progress_empty;
-    public GUIStyle progress_full;
-    public Texture aTexture;
-    public GameObject enemy;
     public Progressbar currBar;
 
     public BrickData[] allBricks; 
     List<BrickData> aliveBricks;
+    BallManager ballManager;
+    GUIManager guiManager;
+
     float totalLevelHealth;
 
+    string[] titleWindows = new string[2]{
+      "Title",
+      "HighScores"
+    };
+    int titleIterator = 0;
+
     void Awake(){
+      if(GameManager.s_instance == null){
+        GameManager.s_instance = this;
+      }else{
+        Destroy(gameObject);
+      }
+      ballManager = GetComponent<BallManager>();
+      guiManager = transform.GetChild(0).GetComponent<GUIManager>();
       DontDestroyOnLoad(gameObject);
     }
     void Update(){
-      print(CurrentGameState);
       if(Application.loadedLevelName == "Title"){
         CurrentGameState = GameState.Title;
       }
       switch (CurrentGameState){
         case GameState.Title:
+          if(!guiManager.displayingWindow){
+            if(guiManager.displayWindowFor(titleWindows[titleIterator], 5f)){
+              titleIterator++;
+              if(titleIterator == titleWindows.Length){
+                titleIterator = 0;
+              }
+            }
+          }
           if(Input.GetMouseButtonDown(0)){
             Application.LoadLevel("Level1");
             CurrentGameState = GameState.ConfigureLevel;
           }
           break;
         case GameState.ConfigureLevel:
+          guiManager.resetWindow();
           GameObject[] Blocks = GameObject.FindGameObjectsWithTag("block");
           allBricks = new BrickData[Blocks.Length];
           for(int i = 0; i<allBricks.Length; i++){
@@ -103,12 +125,32 @@ public class GameManager : MonoBehaviour{
               aliveBricks.RemoveAt(i);
             }
           }
-          print(aliveBricks.Count);
+          if(aliveBricks.Count == 0){
+            CurrentGameState = GameState.Won;
+          }
           //Add timer if ball is being thrown or timer is activated
+          break;
+        case GameState.Won:
+          if(guiManager.displayWindowFor("Won", 5f)){
+            if(guiManager.finishedDisplaying.ToLower() == "won"){
+              guiManager.resetWindow();
+              CurrentGameState = GameState.GameOver;
+            }
+          }
+          break;
+        case GameState.GameOver:
+          if(guiManager.displayWindowFor("gameover", 5f)){
+            if(guiManager.finishedDisplaying.ToLower() == "gameover"){
+              guiManager.resetWindow();
+              CurrentGameState = GameState.Title;
+              Application.LoadLevel("Title");
+            }
+          }
           break;
         default:
             break;
       }
+      print(CurrentGameState);
     }
     public int GetDestroyedBlocks(){
       int amtOfBlocksDestroyed = 0;
@@ -133,40 +175,4 @@ public class GameManager : MonoBehaviour{
       }
       return healthToReturn;
     }
-
-    public static void AutoResize(int screenWidth, int screenHeight)
-    {
-        //Incase of different quality projectors or load settings
-        Vector2 resizeRatio = new Vector2((float)Screen.width / screenWidth, (float)Screen.height / screenHeight);
-        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(resizeRatio.x, resizeRatio.y, 1.0f));
-    }
-    public void achivement()
-    {
-    }
-    void OnGui()
-    {
-        AutoResize(800, 480);
-        switch (CurrentGameState)
-        {
-            case GameState.Start:
-                GUI.Label(new Rect(0, 150, 200, 100), "Throw a ball to start ");
-                break;
-            case GameState.Won:
-                GUI.Label(new Rect(0, 150, 200, 100), "You Won! a ball to start ");
-                break;
-            case GameState.Lost:
-                GUI.Label(new Rect(0, 150, 200, 100), "You Lost a ball to start ");
-                break;
-            default:
-                break;
-        }
-
-
-    }
-    void percent()
-    {
-    }
-
-
-   
 }

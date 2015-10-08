@@ -49,7 +49,7 @@ public class enemycontact : MonoBehaviour
             if (Health <= 0)
             {
                 Debug.Log("enemycontact");
-                _Scriptb.achivement();
+                //_Scriptb.achivement();
                // Destroy(this.gameObject);
             }
         }
