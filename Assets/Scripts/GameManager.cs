@@ -57,35 +57,6 @@ public class GameManager : MonoBehaviour{
     void Awake(){
       DontDestroyOnLoad(gameObject);
     }
-<<<<<<< HEAD
-    void Update()
-    {
-<<<<<<< HEAD
-=======
-      
->>>>>>> e0b60e0e3a91346a0374f709801b896c3f828828
-      currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
-      switch (CurrentGameState)
-      {
-          case GameState.Start:
-              break;
-          case GameState.BallMovingtoPos:
-              //Can add pause here or timer
-              break;
-          case GameState.Playing:
-              //Add timer if ball is being thrown or timer is activated
-              break;
-          case GameState.Won:
-          case GameState.Lost:
-              if (Input.GetMouseButtonUp(0)) ;
-              {
-                  Application.LoadLevel(Application.loadedLevel);
-
-              }
-              break;
-          default:
-              break;
-=======
     void Update(){
       print(CurrentGameState);
       if(Application.loadedLevelName == "Title"){
@@ -125,7 +96,6 @@ public class GameManager : MonoBehaviour{
           break;
         default:
             break;
->>>>>>> wyattDevBranch
       }
     }
     public int GetDestroyedBlocks(){

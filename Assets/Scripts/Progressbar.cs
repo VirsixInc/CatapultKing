@@ -95,18 +95,6 @@ public class Progressbar : MonoBehaviour {
 
 
     }
-
-<<<<<<< HEAD
-	// Use this for initialization
-	void Start () {
-	
-	}
-  public void updateBar(float amt){
-    Image image = GetComponent<Image>();
-    image.fillAmount = amt;
-=======
->>>>>>> e0b60e0e3a91346a0374f709801b896c3f828828
-
 }
 
 
