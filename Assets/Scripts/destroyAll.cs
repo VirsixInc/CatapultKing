@@ -13,10 +13,6 @@ public class destroyAll : MonoBehaviour {
 	
 	}
   void OnCollisionEnter(Collision coll){
-    if(coll.gameObject.tag == "brick"){
-      coll.gameObject.GetComponent<brick>().DestroyBrick();
-    }else{
-      Destroy(coll.gameObject);
-    }
+    Destroy(coll.gameObject);
   }
 }

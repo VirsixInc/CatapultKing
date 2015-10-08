@@ -18,7 +18,6 @@ public class Progressbar : MonoBehaviour {
 
     }
     public void updateBar(float amt) {
-        print("AMOUNT IS: " + amt);
         Image image = GetComponent<Image>();
         image.fillAmount = amt;
         achivTewenty();
@@ -26,6 +25,8 @@ public class Progressbar : MonoBehaviour {
 
     public void ImageObject()
     {
+
+      /*
         if (imageObject == null)
         {
             GameObject gameobj = new GameObject("ImageObjcet");
@@ -35,6 +36,7 @@ public class Progressbar : MonoBehaviour {
             imageObject.pixelInset = imageScreenCord;
         }
         return;
+        */
     }
 
     public void FlashImage()

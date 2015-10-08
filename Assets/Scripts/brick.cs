@@ -37,12 +37,11 @@ public class brick : MonoBehaviour{
     }
   }
   public void DestroyBrick(){
-    currManager.allBricks[id].updateBlock(0); //KILL BLOCK
     Destroy(gameObject);
   }
   void OnTriggerExit(Collider col){
     if(col.gameObject.tag == "ground"){
-      DestroyBrick();
+      currManager.allBricks[id].updateBlock(0);
     }
   }
   public bool ReceiveDamage(string type, float amt){

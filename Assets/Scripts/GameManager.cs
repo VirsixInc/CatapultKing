@@ -25,6 +25,16 @@ public class BrickData{
     }
     return isDead;
   }
+
+  public bool checkBlock(){
+    if(assocBlock == null){
+      currHealth = 0;
+      isDead = true;
+    }else if(currHealth == 0){
+      isDead = true;
+    }
+    return isDead;
+  }
 }
 
 public class GameManager : MonoBehaviour{
@@ -40,11 +50,11 @@ public class GameManager : MonoBehaviour{
   //This is not the damage inflicted, this is the maximum amount of damage
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
       {"fragment",1},
-      {"explosion",50},
+      {"explosion",10},
+      {"kill",9999999},
       {"ball",999999}
     };
     public static GameState CurrentGameState;
-    private List<GameObject> Blocks;
     public GUIStyle progress_empty;
     public GUIStyle progress_full;
     public Texture aTexture;
@@ -52,6 +62,7 @@ public class GameManager : MonoBehaviour{
     public Progressbar currBar;
 
     public BrickData[] allBricks; 
+    List<BrickData> aliveBricks;
     float totalLevelHealth;
 
     void Awake(){
@@ -70,28 +81,29 @@ public class GameManager : MonoBehaviour{
           }
           break;
         case GameState.ConfigureLevel:
-          Blocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("block"));
-          allBricks = new BrickData[Blocks.Count];
+          GameObject[] Blocks = GameObject.FindGameObjectsWithTag("block");
+          allBricks = new BrickData[Blocks.Length];
           for(int i = 0; i<allBricks.Length; i++){
             brick currBrick = Blocks[i].GetComponent<brick>();
             currBrick.id = i;
             allBricks[i] = new BrickData((int)currBrick.maxHealth, i, currBrick, this);
           }
+          aliveBricks = new List<BrickData>(allBricks);
           currBar = GameObject.Find("HealthOverlay").GetComponent<Progressbar>();
           totalLevelHealth = GetTotalLevelHealth();
-          print(Blocks.Count);
-          print(allBricks.Length);
           CurrentGameState = GameState.Playing;
           break;
         case GameState.Start:
           break;
         case GameState.Playing:
           currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
-          foreach(BrickData data in allBricks){
-            if(!data.isDead){
-              print("BLOCK ID: " + data.id + "    BLOCK HEALTH: " + data.currHealth);
+          for(int i =0; i<aliveBricks.Count;i++){
+            int aliveBrickId = aliveBricks[i].id;
+            if(allBricks[aliveBrickId].checkBlock()){
+              aliveBricks.RemoveAt(i);
             }
           }
+          print(aliveBricks.Count);
           //Add timer if ball is being thrown or timer is activated
           break;
         default:
@@ -122,15 +134,6 @@ public class GameManager : MonoBehaviour{
       return healthToReturn;
     }
 
-    public void UpdateBlock(int id, float currHealth){
-
-
-    }
-
-    private bool Blockcheck()
-    {
-        return Blocks.All((x => x == null));
-    }
     public static void AutoResize(int screenWidth, int screenHeight)
     {
         //Incase of different quality projectors or load settings
