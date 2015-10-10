@@ -18,7 +18,7 @@ public class SpecialEffectsHelper : MonoBehaviour
         // Register the singleton
         if (Instance != null)
         {
-            Debug.LogError("Multiple instances of SpecialEffectsHelper!");
+          Destroy(gameObject);
         }
 
         Instance = this;

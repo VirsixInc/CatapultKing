@@ -57,20 +57,20 @@ public class GameManager : MonoBehaviour{
       {"ball",999999}
     };
     public static GameState CurrentGameState;
-    public Progressbar currBar;
-
     public BrickData[] allBricks; 
     List<BrickData> aliveBricks;
     BallManager ballManager;
     GUIManager guiManager;
 
     float totalLevelHealth;
+    float roundClock, roundDuration = 15f;
 
     string[] titleWindows = new string[2]{
       "Title",
       "HighScores"
     };
     int titleIterator = 0;
+    float levelProgress, ticketProgress;
 
     void Awake(){
       if(GameManager.s_instance == null){
@@ -111,14 +111,22 @@ public class GameManager : MonoBehaviour{
             allBricks[i] = new BrickData((int)currBrick.maxHealth, i, currBrick, this);
           }
           aliveBricks = new List<BrickData>(allBricks);
-          currBar = GameObject.Find("HealthOverlay").GetComponent<Progressbar>();
           totalLevelHealth = GetTotalLevelHealth();
+          roundClock = Time.time + roundDuration;
+          guiManager.displayingUi = true;
           CurrentGameState = GameState.Playing;
           break;
         case GameState.Start:
           break;
         case GameState.Playing:
-          currBar.updateBar(((float)GetDestroyedBlocks()/(float)allBricks.Length));
+          if(Input.GetMouseButtonDown(0)){
+            ballManager.Shoot(Input.mousePosition);
+          }
+          float currProg = ((float)GetDestroyedBlocks()/(float)allBricks.Length);
+          if(levelProgress != currProg){
+            levelProgress = currProg;
+            guiManager.updateSlider("CompletionMeter", levelProgress);
+          }
           for(int i =0; i<aliveBricks.Count;i++){
             int aliveBrickId = aliveBricks[i].id;
             if(allBricks[aliveBrickId].checkBlock()){
@@ -128,9 +136,14 @@ public class GameManager : MonoBehaviour{
           if(aliveBricks.Count == 0){
             CurrentGameState = GameState.Won;
           }
+          guiManager.timeLeft = roundClock-Time.time;
+          if(roundClock-Time.time <= 0){
+            CurrentGameState = GameState.Lost;
+          }
           //Add timer if ball is being thrown or timer is activated
           break;
         case GameState.Won:
+          guiManager.displayingUi = false;
           if(guiManager.displayWindowFor("Won", 5f)){
             if(guiManager.finishedDisplaying.ToLower() == "won"){
               guiManager.resetWindow();
@@ -138,7 +151,17 @@ public class GameManager : MonoBehaviour{
             }
           }
           break;
+        case GameState.Lost:
+          guiManager.displayingUi = false;
+          if(guiManager.displayWindowFor("Lost", 5f)){
+            if(guiManager.finishedDisplaying.ToLower() == "lost"){
+              guiManager.resetWindow();
+              CurrentGameState = GameState.GameOver;
+            }
+          }
+          break;
         case GameState.GameOver:
+          guiManager.displayingUi = false;
           if(guiManager.displayWindowFor("gameover", 5f)){
             if(guiManager.finishedDisplaying.ToLower() == "gameover"){
               guiManager.resetWindow();
@@ -154,11 +177,7 @@ public class GameManager : MonoBehaviour{
     }
     public int GetDestroyedBlocks(){
       int amtOfBlocksDestroyed = 0;
-      foreach(BrickData currData in allBricks){
-        if(currData.isDead){
-          amtOfBlocksDestroyed++;
-        }
-      }
+      amtOfBlocksDestroyed = allBricks.Length-aliveBricks.Count;
       return amtOfBlocksDestroyed;
     }
     public float GetTotalLevelHealth(){

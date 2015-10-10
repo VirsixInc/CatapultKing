@@ -25,11 +25,6 @@ public class BallManager : MonoBehaviour {
 		public Vector3 dest;
 	}
 
-	void Update () {
-    if(Input.GetMouseButtonDown(0))
-      Shoot(Input.mousePosition);
-	}
-
 	public void Shoot(Vector2 pos) {
 		RaycastHit hit;
 		if(Physics.Raycast(Camera.main.ScreenPointToRay(pos), out hit)) {
