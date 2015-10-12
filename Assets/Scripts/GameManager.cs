@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour{
       DontDestroyOnLoad(gameObject);
     }
     void Update(){
-      if(Application.loadedLevelName == "Title"){
+		if(Application.loadedLevelName == "Title"){
         CurrentGameState = GameState.Title;
       }
       switch (CurrentGameState){
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour{
             }
           }
           if(Input.GetMouseButtonDown(0)){
-            Application.LoadLevel("Level1");
+				Application.LoadLevel("Level1");
             CurrentGameState = GameState.ConfigureLevel;
           }
           break;
