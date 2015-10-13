@@ -14,6 +14,7 @@ public class GUIManager : MonoBehaviour {
   float timeTillRemove;
   bool pullWindow;
   public bool displayingWindow = false;
+  bool windowOffScreen;
 
   float lerpStart,
         lerpDistanceStart;
@@ -68,15 +69,16 @@ public class GUIManager : MonoBehaviour {
             lerpDestination, fracJourney);
       }else if(Time.time > timeTillRemove){
         setWindowDest(false);
+        windowOffScreen = true;
       }
-      if(Vector2.Distance(
-            panelToUse.transform.position, 
-            lerpDestination) < 0.9f){
-        panelToUse.transform.position = lerpDestination;
-        if(Time.time > timeTillRemove){
-          displayingWindow = false;
-          resetWindow();
-        }
+    }
+    if(Vector2.Distance(
+          panelToUse.transform.position, 
+          lerpDestination) < 0.9f && windowOffScreen){
+      panelToUse.transform.position = lerpDestination;
+      if(Time.time > timeTillRemove){
+        displayingWindow = false;
+        resetWindow();
       }
     }
   }
@@ -101,6 +103,7 @@ public class GUIManager : MonoBehaviour {
   }
   public void resetWindow(){
     displayingWindow = false;
+    windowOffScreen = false;
     finishedDisplaying = panelToUse.name;
     panelToUse.SetActive(false);
     panelToUse.transform.position = new Vector2(Screen.width*2, Screen.height/2);

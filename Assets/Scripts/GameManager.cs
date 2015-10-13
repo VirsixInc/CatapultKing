@@ -162,7 +162,7 @@ public class GameManager : MonoBehaviour{
           if(currDodgeballs.Count > 0){
             for(int i = 0; i<currDodgeballs.Count;i++){
               if(currDodgeballs[i].destroyMe){
-                if(currDodgeballs[i].amtOfBricksHit >= 50){
+                if(currDodgeballs[i].amtOfBricksHit >= 30){
                   guiManager.displayWindowFor("50kills",2f);
                 }
                 Destroy(currDodgeballs[i]);
