@@ -4,6 +4,13 @@ using Assets.Scripts;
 using System;
 using System.Linq;
 
+public class ShootData {
+  public ShootData(Vector2 p_start, Vector3 p_dest) {
+    start = p_start; dest = p_dest;
+  }
+  public Vector2 start;
+  public Vector3 dest;
+}
 public class BrickData{
   public int maxHealth, currHealth;
   public bool isDead;
@@ -37,30 +44,48 @@ public class BrickData{
   }
 }
 
-public class GameManager : MonoBehaviour{
-  public enum GameState{
-    Title,
-    ConfigureLevel,
-    Start,
-    Playing,
-    Won,
-    GameOver,
-    Lost
+/*
+public class DodgeballData{
+  public int bricksHit, bricksDestroyed;
+  public GameObject assocGameObject; //associated gameobject
+  public int id;
+  
+  public DodgeballData(GameObject assocGameObjectToSet, int idToSet){
+    assocGameObject = assocGameObjectToSet;
+    id = idToSet;
+    assocGameObject.name = id.ToString();
   }
-  public static GameManager s_instance;
-  //Add tag of the objects to collide with damage value
-  //This is not the damage inflicted, this is the maximum amount of damage
+}
+*/
+public class GameManager : MonoBehaviour{
+    public enum GameState{
+      Title,
+      ConfigureLevel,
+      Start,
+      Playing,
+      Won,
+      GameOver,
+      Lost
+    }
+    public static GameManager s_instance;
+    public static GameState CurrentGameState;
+
+    //Add tag of the objects to collide with damage value
+    //This is not the damage inflicted, this is the maximum amount of damage
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
       {"fragment",1},
       {"explosion",10},
       {"kill",9999999},
       {"ball",999999}
     };
-    public static GameState CurrentGameState;
     public BrickData[] allBricks; 
     List<BrickData> aliveBricks;
+    List<Dodgeball> currDodgeballs = new List<Dodgeball>();
     BallManager ballManager;
     GUIManager guiManager;
+    
+    public GameObject ballPrefab;
+    public float shootStrength;
 
     float totalLevelHealth;
     float roundClock, roundDuration = 15f;
@@ -69,7 +94,7 @@ public class GameManager : MonoBehaviour{
       "Title",
       "HighScores"
     };
-    int titleIterator = 0;
+    int titleIterator = 0, ballIterator = 0;
     float levelProgress, ticketProgress;
 
     void Awake(){
@@ -97,7 +122,7 @@ public class GameManager : MonoBehaviour{
             }
           }
           if(Input.GetMouseButtonDown(0)){
-				Application.LoadLevel("Level1");
+            Application.LoadLevel("Level1");
             CurrentGameState = GameState.ConfigureLevel;
           }
           break;
@@ -120,7 +145,8 @@ public class GameManager : MonoBehaviour{
           break;
         case GameState.Playing:
           if(Input.GetMouseButtonDown(0)){
-            ballManager.Shoot(Input.mousePosition);
+            //ballIterator++;
+            currDodgeballs.Add(Shoot(Input.mousePosition).GetComponent<Dodgeball>());//new DodgeballData(Shoot(Input.mousePosition),ballIterator));
           }
           float currProg = ((float)GetDestroyedBlocks()/(float)allBricks.Length);
           if(levelProgress != currProg){
@@ -131,6 +157,17 @@ public class GameManager : MonoBehaviour{
             int aliveBrickId = aliveBricks[i].id;
             if(allBricks[aliveBrickId].checkBlock()){
               aliveBricks.RemoveAt(i);
+            }
+          }
+          if(currDodgeballs.Count > 0){
+            for(int i = 0; i<currDodgeballs.Count;i++){
+              if(currDodgeballs[i].destroyMe){
+                if(currDodgeballs[i].amtOfBricksHit >= 50){
+                  guiManager.displayWindowFor("50kills",2f);
+                }
+                Destroy(currDodgeballs[i]);
+                currDodgeballs.RemoveAt(i);
+              }
             }
           }
           if(aliveBricks.Count == 0){
@@ -174,6 +211,29 @@ public class GameManager : MonoBehaviour{
             break;
       }
       print(CurrentGameState);
+    }
+
+    GameObject Shoot(Vector2 pos){//ShootData shootData) {
+      RaycastHit hit;
+      if(Physics.Raycast(Camera.main.ScreenPointToRay(pos),out hit)){
+        ShootData shootData = new ShootData(pos, hit.point);
+
+        Vector3 startPos = shootData.start;
+        //	startPos.z -= Camera.main.transform.position.z/4f;// - nearPlane.transform.position.z;
+
+        GameObject ball = Instantiate(ballPrefab) as GameObject;//StaticPool.GetObj("red");//ballPrefabDict[shootData.color.ToString()]);
+        //ball.GetComponent<Ball>().Reset();
+
+        ball.transform.position = Camera.main.ScreenToWorldPoint(startPos + Camera.main.transform.forward * 4f);
+        ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+        Vector3 shootDir = shootData.dest - ball.transform.position;
+        shootDir.Normalize();
+        ball.GetComponent<Rigidbody>().AddForce(shootDir*shootStrength);
+        return ball;
+      }else{
+        return null;
+      }
     }
     public int GetDestroyedBlocks(){
       int amtOfBlocksDestroyed = 0;

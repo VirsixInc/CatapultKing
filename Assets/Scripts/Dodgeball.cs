@@ -5,6 +5,8 @@ using Assets.Scripts;
 public class Dodgeball : MonoBehaviour {
   public float partLifeTime, radius, explForce;
   private bool exploded;
+  public int amtOfBricksHit, amtOfBricksDestroyed;
+  public bool destroyMe = false;
   void OnCollisionEnter(Collision coll) {
     if(!exploded){
       exploded = true;
@@ -15,13 +17,22 @@ public class Dodgeball : MonoBehaviour {
         Rigidbody rb = hit.GetComponent<Rigidbody>();
         if (rb != null){
           if(hit.GetComponent<brick>()){
-            hit.gameObject.GetComponent<brick>().ReceiveDamage("explosion", (Vector3.Distance(explosionPos, hit.gameObject.transform.position)/radius));
+            float explDistance = (Vector3.Distance(explosionPos, hit.gameObject.transform.position)/radius); //normalized explosion distance
+            bool destroyed = hit.gameObject.GetComponent<brick>().ReceiveDamage("explosion", explDistance);
+            if(explDistance < 0.5f){
+              amtOfBricksHit++;
+            }
+            if(destroyed){
+              amtOfBricksDestroyed++;
+            }
+
           }
           rb.AddExplosionForce(explForce, explosionPos, radius, 3.0F);
         }
       }
       Destroy(GameObject.FindGameObjectWithTag("particle"), partLifeTime);
-      Destroy(this);
+      destroyMe = true;
+      //Destroy(this);
     }
   }
 
