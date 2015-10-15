@@ -14,6 +14,7 @@ public class brick : MonoBehaviour{
   private int currentHealth;
 
   Rigidbody currBody;
+  public bool isDead;
   void Start(){
     currBody = GetComponent<Rigidbody>();
     if(gameObject.tag == "broken"){
@@ -27,7 +28,7 @@ public class brick : MonoBehaviour{
     if(currentHealth <= 0 && gameObject.tag == "block"){
       currManager.allBricks[id].updateBlock(0); //KILL BLOCK
       gameObject.tag = "fragment";
-      GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 3);
+      GameObject[] shatters = TurboSlice.instance.shatter(gameObject, 2);
       foreach (GameObject shattered in shatters){
         shattered.gameObject.tag = "fragment";
         shattered.GetComponent<Rigidbody>().velocity = shattered.GetComponent<Rigidbody>().velocity / 2;
@@ -45,17 +46,18 @@ public class brick : MonoBehaviour{
     }
   }
   public bool ReceiveDamage(string type, float amt){
-    bool isDead = false;
+    bool dead = false;
     amt = Mathf.Clamp(amt, 0f, 1f);
     if(currManager.damageValues.ContainsKey(type)){
       int dmgToReceive;
       if(currManager.damageValues.TryGetValue(type, out dmgToReceive)){
         dmgToReceive = (int)(dmgToReceive*amt);
         currentHealth = currentHealth-dmgToReceive;
-        isDead = currManager.allBricks[id].updateBlock((int)currentHealth);
+        dead = currManager.allBricks[id].updateBlock((int)currentHealth);
       }
     }
-    return isDead;
+    isDead = dead;
+    return dead;
   }
   void OnCollisionEnter(Collision col){
     if(col.gameObject.tag == "block"){

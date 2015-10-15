@@ -17,13 +17,16 @@ public class Dodgeball : MonoBehaviour {
         Rigidbody rb = hit.GetComponent<Rigidbody>();
         if (rb != null){
           if(hit.GetComponent<brick>()){
+            brick brickToHurt = hit.GetComponent<brick>();
             float explDistance = (Vector3.Distance(explosionPos, hit.gameObject.transform.position)/radius); //normalized explosion distance
-            bool destroyed = hit.gameObject.GetComponent<brick>().ReceiveDamage("explosion", explDistance);
+            if(!brickToHurt.isDead){
+              bool destroyed = brickToHurt.ReceiveDamage("explosion", explDistance);
+              if(destroyed){
+                amtOfBricksDestroyed++;
+              }
+            }
             if(explDistance < 0.5f){
               amtOfBricksHit++;
-            }
-            if(destroyed){
-              amtOfBricksDestroyed++;
             }
 
           }

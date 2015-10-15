@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour{
     //This is not the damage inflicted, this is the maximum amount of damage
     public Dictionary<string,int> damageValues = new Dictionary<string,int>(){
       {"fragment",1},
-      {"explosion",10},
+      {"explosion",200},
       {"kill",9999999},
       {"ball",999999}
     };
@@ -87,8 +87,12 @@ public class GameManager : MonoBehaviour{
     public GameObject ballPrefab;
     public float shootStrength;
 
+    float currTickets, currDispTickets;
+    float meterFill = 4f;
+    int compTickets;
     float totalLevelHealth;
     float roundClock, roundDuration = 15f;
+    float comboRate = 0.3f;
 
     string[] titleWindows = new string[2]{
       "Title",
@@ -122,7 +126,7 @@ public class GameManager : MonoBehaviour{
             }
           }
           if(Input.GetMouseButtonDown(0)){
-            Application.LoadLevel("Level1");
+            Application.LoadLevel("HughTestLevel01");
             CurrentGameState = GameState.ConfigureLevel;
           }
           break;
@@ -149,10 +153,10 @@ public class GameManager : MonoBehaviour{
             currDodgeballs.Add(Shoot(Input.mousePosition).GetComponent<Dodgeball>());//new DodgeballData(Shoot(Input.mousePosition),ballIterator));
           }
           float currProg = ((float)GetDestroyedBlocks()/(float)allBricks.Length);
-          if(levelProgress != currProg){
-            levelProgress = currProg;
-            guiManager.updateSlider("CompletionMeter", levelProgress);
-          }
+          currDispTickets = Mathf.MoveTowards(currDispTickets, currProg, 
+              Time.deltaTime*meterFill*Mathf.Abs(currDispTickets-currProg));//*meterFill);
+          guiManager.updateSlider("CompletionMeter", currDispTickets);
+          guiManager.progressPercent = (int)(currProg*100f);
           for(int i =0; i<aliveBricks.Count;i++){
             int aliveBrickId = aliveBricks[i].id;
             if(allBricks[aliveBrickId].checkBlock()){
@@ -163,21 +167,28 @@ public class GameManager : MonoBehaviour{
             for(int i = 0; i<currDodgeballs.Count;i++){
               if(currDodgeballs[i].destroyMe){
                 if(currDodgeballs[i].amtOfBricksHit >= 30){
-                  guiManager.displayWindowFor("50kills",2f);
+                  guiManager.displayWindowFor("50kills", 5f);
                 }
+                currTickets = currTickets + Mathf.Clamp((Mathf.Pow((1f+comboRate),(float)(currDodgeballs[i].amtOfBricksDestroyed)))/100, 0, 100); //combo rate
+                compTickets += (int)(Mathf.Floor(currTickets));
+                currTickets = currTickets-(Mathf.Floor(currTickets));
+                guiManager.updateSlider("ticketMeter", currTickets);
                 Destroy(currDodgeballs[i]);
                 currDodgeballs.RemoveAt(i);
               }
             }
           }
+
+          //------ UPDATE GUIMANAGER WITH TIMER AND TICKETS
+          guiManager.timeLeft = Mathf.Ceil(roundClock-Time.time);
+          guiManager.dispTickets = compTickets;
+          if(roundClock-Time.time <= 0){
+            guiManager.resetWindow(false);
+            CurrentGameState = GameState.Lost;
+          }
           if(aliveBricks.Count == 0){
             CurrentGameState = GameState.Won;
           }
-          guiManager.timeLeft = roundClock-Time.time;
-          if(roundClock-Time.time <= 0){
-            CurrentGameState = GameState.Lost;
-          }
-          //Add timer if ball is being thrown or timer is activated
           break;
         case GameState.Won:
           guiManager.displayingUi = false;
