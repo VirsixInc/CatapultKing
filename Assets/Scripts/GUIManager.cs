@@ -30,8 +30,10 @@ public class GUIManager : MonoBehaviour {
 
   Dictionary<string,GameObject> uiElements = new Dictionary<string,GameObject>();
   public float timeLeft;
+  public int dispTickets = 0;
+  public int progressPercent = 0;
   public bool displayingUi = false;
-  Text timer;
+  Text timer, ticketDisplay, progressDisplay;
   GameObject uiParent;
 
 
@@ -48,6 +50,12 @@ public class GUIManager : MonoBehaviour {
       if(trans.gameObject.name.ToLower() == "timer"){
         timer = trans.gameObject.GetComponent<Text>();
       }
+      if(trans.gameObject.name.ToLower() == "ticketdisplay"){
+        ticketDisplay = trans.gameObject.GetComponent<Text>();
+      }
+      if(trans.gameObject.name.ToLower() == "progressdisplay"){
+        progressDisplay = trans.gameObject.GetComponent<Text>();
+      }
     }
   }
 
@@ -57,6 +65,8 @@ public class GUIManager : MonoBehaviour {
         uiParent.SetActive(true);
       }
       timer.text = timeLeft.ToString();
+      progressDisplay.text = progressPercent.ToString();
+      ticketDisplay.text = dispTickets.ToString();
     }else if(uiParent.activeSelf){
       uiParent.SetActive(false);
     }
@@ -67,9 +77,9 @@ public class GUIManager : MonoBehaviour {
         panelToUse.transform.position = Vector2.Lerp(
             panelToUse.transform.position, 
             lerpDestination, fracJourney);
-      }else if(Time.time > timeTillRemove){
+      }
+      if(Time.time > timeTillRemove){
         setWindowDest(false);
-        windowOffScreen = true;
       }
     }
     if(Vector2.Distance(
@@ -95,18 +105,24 @@ public class GUIManager : MonoBehaviour {
     if(location){
       lerpDestination = new Vector2(Screen.width/2,Screen.height/2);
     }else{
+      windowOffScreen = true;
       lerpDestination = new Vector2(Screen.width*-2,Screen.height/2);
     }
     lerpDistanceStart = Vector2.Distance(
         panelToUse.transform.position,
         lerpDestination);
   }
-  public void resetWindow(){
-    displayingWindow = false;
-    windowOffScreen = false;
-    finishedDisplaying = panelToUse.name;
-    panelToUse.SetActive(false);
-    panelToUse.transform.position = new Vector2(Screen.width*2, Screen.height/2);
+  public void resetWindow(bool hard = true){
+    if(hard){
+      displayingWindow = false;
+      windowOffScreen = false;
+      finishedDisplaying = panelToUse.name;
+      panelToUse.SetActive(false);
+      panelToUse.transform.position = new Vector2(Screen.width*2, Screen.height/2);
+    }else{
+      setWindowDest(false);
+      timeTillRemove = Time.time;
+    }
   }
 
   public bool displayWindowFor(string windowTitle, float windowDuration){
